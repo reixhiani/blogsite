@@ -4,14 +4,16 @@ using BlogSite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BlogSite.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210411143704_InitialCatalog")]
+    partial class InitialCatalog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,23 +101,6 @@ namespace BlogSite.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Technology"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Sport"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Music"
-                        });
                 });
 
             modelBuilder.Entity("BlogSite.Entities.Comment", b =>
