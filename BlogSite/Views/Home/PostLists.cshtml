@@ -1,0 +1,22 @@
+﻿@model List<PostModel>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="card-deck" style="display:grid; grid-template-columns: auto auto auto;">
+    @foreach (var item in Model)
+    {
+        <div id="@item.Id" class="card" style="margin-bottom: 15px;">
+            <img class="card-img-top" src="~/images/lights.jpg" alt="Post image">
+            <div class="card-body">
+                <h5 class="card-title">@item.Title</h5>
+                <p class="card-text">@item.Text</p>
+                <a href="#" class="btn btn-primary">Read more</a>
+            </div>
+            <div class="card-footer">
+                <small class="text-muted">Author: @item.User.UserName</small>
+            </div>
+        </div>
+    }
+</div>

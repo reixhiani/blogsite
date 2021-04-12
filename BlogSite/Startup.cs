@@ -1,5 +1,10 @@
+using AutoMapper;
+using BlogSite.AutoMapper;
 using BlogSite.Data;
 using BlogSite.Entities;
+using BlogSite.Interfaces;
+using BlogSite.Repository;
+using BlogSite.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -33,6 +38,26 @@ namespace BlogSite
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IPostSerivce, PostService>();
+
+            // Auto Mapper Configurations
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+            // json ignore
+            services.AddControllersWithViews()
+              .AddNewtonsoftJson(options =>
+              options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+              .AddDataAnnotationsLocalization();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -63,7 +88,7 @@ namespace BlogSite
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=GetAll}/{id?}");
                 endpoints.MapRazorPages();
             });
         }
