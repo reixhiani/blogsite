@@ -12,17 +12,17 @@ namespace BlogSite.AutoMapper
     {
         public MappingProfile()
         {
-            CreateMap<Post, PostModel>()
+            CreateMap<Post, PostViewModel>()
                 .ForMember(dto => dto.Categories, opt => opt.MapFrom(x => x.PostCategorys.Select(y => y.Category).ToList()))
                 .ReverseMap()
                 .ForMember(d => d.PostCategorys, opt => opt.MapFrom(s => s.Categories.Select
                 (c => new PostCategory { PostId = s.Id, CategoryId = c.Id })))
                 .ForMember(d => d.User, opt => opt.Ignore());
 
-            CreateMap<Category, CategoryModel>().ReverseMap();
-            CreateMap<Comment, CommentModel>().ReverseMap();
+            CreateMap<Category, CategoryViewModel>().ReverseMap();
+            CreateMap<Comment, CommentViewModel>().ReverseMap();
 
-            CreateMap<ApplicationUser, ApplicationUserModel>().ReverseMap();
+            CreateMap<ApplicationUser, ApplicationUserViewModel>().ReverseMap();
         }
     }
 }

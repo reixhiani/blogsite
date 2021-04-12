@@ -1,21 +1,37 @@
-﻿@model List<PostModel>
+﻿@model List<PostViewModel>
 
 @{
     ViewData["Title"] = "Home Page";
 }
 
+<div class="row">
+    <a class="btn btn-success" asp-action="AddPost" asp-controller="Home">Add new post</a>
+</div>
+
 <div class="card-deck" style="display:grid; grid-template-columns: auto auto auto;">
-    @foreach (var item in Model)
+
+    @foreach (var post in Model)
     {
-        <div id="@item.Id" class="card" style="margin-bottom: 15px;">
-            <img class="card-img-top" src="~/images/lights.jpg" alt="Post image">
+        var imagePath = "~/images/" + (post.ImagePath ?? "defaultImage.jpg");
+
+        <div class="card" style="margin-bottom: 15px;">
+            <img class="card-img-top" src="@imagePath" asp-append-version="true" alt="Post image">
             <div class="card-body">
-                <h5 class="card-title">@item.Title</h5>
-                <p class="card-text">@item.Text</p>
-                <a href="#" class="btn btn-primary">Read more</a>
+                <h5 class="card-title">@post.Title</h5>
+
+                @if (post.Text.Length > 100)
+                {
+                    <p class="card-text">@post.Text.Substring(0, 100) ...</p>
+                }
+                else
+                {
+                    <p class="card-text">@post.Text</p>
+                }
+
+                <a class="btn btn-primary" asp-action="GetById" asp-controller="Home" asp-route-id="@post.Id">Read more</a>
             </div>
             <div class="card-footer">
-                <small class="text-muted">Author: @item.User.UserName</small>
+                <small class="text-muted">Author: @post.User.UserName</small>
             </div>
         </div>
     }

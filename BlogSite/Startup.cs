@@ -36,12 +36,12 @@ namespace BlogSite
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<ApplicationUser>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IPostSerivce, PostService>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             // Auto Mapper Configurations
             var mapperConfig = new MapperConfiguration(mc =>

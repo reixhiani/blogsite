@@ -1,0 +1,24 @@
+﻿@model PostViewModel
+
+@{
+    ViewData["Title"] = "Post Details";
+    var imagePath = "~/images/" + (Model.ImagePath ?? "defaultImage.jpg");
+}
+
+<div class="card">
+    <div style="height:250px;">
+        <img style="max-width: 100%; max-height: 100%;" class="card-img-top" asp-append-version="true" src="@imagePath" alt="Post image">
+    </div>
+    <div class="card-header">
+        <h5 class="card-title">@Model.Title</h5>
+        <small class="text-muted">Author: @Model.User.UserName</small>
+    </div>
+    <div class="card-body">
+        <p class="card-text">@Model.Text</p>
+    </div>
+
+    <div>
+        comment section
+    </div>
+
+</div>

@@ -22,7 +22,7 @@ namespace BlogSite.Repository
             return _context.Set<T>().AsQueryable();
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        public async Task<List<T>> GetAll()
         {
             return await _context.Set<T>().ToListAsync();
         }

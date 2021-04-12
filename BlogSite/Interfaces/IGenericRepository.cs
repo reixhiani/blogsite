@@ -9,7 +9,7 @@ namespace BlogSite.Interfaces
     {
         IQueryable<T> GetAllAsQueryable();
 
-        Task<IEnumerable<T>> GetAll();
+        Task<List<T>> GetAll();
 
         Task<T> GetById(int id);
 
