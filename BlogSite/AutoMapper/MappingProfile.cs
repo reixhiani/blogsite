@@ -19,6 +19,9 @@ namespace BlogSite.AutoMapper
                 (c => new PostCategory { PostId = s.Id, CategoryId = c.Id })))
                 .ForMember(d => d.User, opt => opt.Ignore());
 
+            CreateMap<Post, UserPostsViewModel>()
+                .ForMember(dto => dto.Categories, opt => opt.MapFrom(x => x.PostCategorys.Select(y => y.Category).ToList()));
+
             CreateMap<Category, CategoryViewModel>().ReverseMap();
             CreateMap<Comment, CommentViewModel>().ReverseMap();
 

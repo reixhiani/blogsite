@@ -19,5 +19,7 @@ namespace BlogSite.Interfaces
         Task DeletePost(Post post);
 
         Task SaveChanges();
+
+        Task<List<Post>> GetPostsByUser(string userId);
     }
 }

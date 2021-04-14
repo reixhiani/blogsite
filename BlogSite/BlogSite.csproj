@@ -14,6 +14,36 @@
     <Compile Remove="Data\Migrations\20210411180658_1.Designer.cs" />
     <Compile Remove="Data\Migrations\20210411200359_1.cs" />
     <Compile Remove="Data\Migrations\20210411200359_1.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413110852_RemovedParentIdColumnFromComment.cs" />
+    <Compile Remove="Data\Migrations\20210413110852_RemovedParentIdColumnFromComment.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413111228_AddedUserIdToCommentTable.cs" />
+    <Compile Remove="Data\Migrations\20210413111228_AddedUserIdToCommentTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413111338_CommentAndUserRelationship.cs" />
+    <Compile Remove="Data\Migrations\20210413111338_CommentAndUserRelationship.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413111636_CommentAndUserRelationship.cs" />
+    <Compile Remove="Data\Migrations\20210413111636_CommentAndUserRelationship.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413111736_RemoveParentIdFromComment.cs" />
+    <Compile Remove="Data\Migrations\20210413111736_RemoveParentIdFromComment.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413111955_CommentAndUserRelationship.cs" />
+    <Compile Remove="Data\Migrations\20210413111955_CommentAndUserRelationship.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413112054_CommentAndUserRelationship.cs" />
+    <Compile Remove="Data\Migrations\20210413112054_CommentAndUserRelationship.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413112329_CommentAndUserRelationship.cs" />
+    <Compile Remove="Data\Migrations\20210413112329_CommentAndUserRelationship.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413112512_CommentAndUserRelationship.cs" />
+    <Compile Remove="Data\Migrations\20210413112512_CommentAndUserRelationship.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413112635_CommentAndUserRelationship.cs" />
+    <Compile Remove="Data\Migrations\20210413112635_CommentAndUserRelationship.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413124029_2.cs" />
+    <Compile Remove="Data\Migrations\20210413124029_2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413124716_CommentAndUserRelationship.cs" />
+    <Compile Remove="Data\Migrations\20210413124716_CommentAndUserRelationship.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413124832_CommentAndUserRelationship.cs" />
+    <Compile Remove="Data\Migrations\20210413124832_CommentAndUserRelationship.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210413125452_CommentAndUserRelationship.cs" />
+    <Compile Remove="Data\Migrations\20210413125452_CommentAndUserRelationship.Designer.cs" />
+    <Compile Remove="Data\Migrations\20210414133951_1.cs" />
+    <Compile Remove="Data\Migrations\20210414133951_1.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

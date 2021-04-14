@@ -15,14 +15,14 @@
     </div>
     <div class="form-group">
         <label asp-for="Text"></label>
-        <input asp-for="Text" type="text" class="form-control" placeholder="Enter text " />
+        <textarea asp-for="Text" type="text" class="form-control" placeholder="Enter text "></textarea>
         <span asp-validation-for="Text" class="text-danger"></span>
     </div>
     <div class="form-group">
         <div>
             <label asp-for="CategoryIds"></label>
         </div>
-        <select id="multiSelect" multiple="multiple" asp-for="CategoryIds" asp-items="@(new MultiSelectList(Model.Categories,"Id","Name"))">
+        <select id="multiSelect" multiple="multiple" asp-for="CategoryIds" asp-items="@(new MultiSelectList(Model.Categories,"Id","Name", Model.CategoryIds))">
         </select>
         <span asp-validation-for="CategoryIds" class="text-danger"></span>
     </div>

@@ -1,0 +1,30 @@
+﻿@model CommentViewModel
+
+<form enctype="multipart/form-data" asp-controller="Comment" asp-action="AddComment" method="post">
+
+    <input hidden asp-for="PostId" />
+    <input hidden asp-for="UserId" />
+    
+    <div class="d-flex justify-content-center row">
+        <div class="col-12">
+            <div class="d-flex flex-column comment-section">
+                <div class="bg-white">
+                    <div class="d-flex flex-row fs-12">
+                        <div class="like p-2 cursor"><i class="fa fa-commenting-o"></i><span class="ml-1">Comment</span></div>
+                    </div>
+                </div>
+                <div class="bg-light p-2">
+                    <div class="d-flex flex-row align-items-start">
+                        <img class="rounded-circle" src="~/images/userPicture.png" alt="User image" width="40">
+                        <textarea asp-for="Content" class="form-control ml-1 shadow-none textarea"></textarea>
+                    </div>
+                    <div class="mt-2 text-right">
+                        <button class="btn btn-primary btn-sm shadow-none" type="submit">Post comment</button>
+                    </div>
+                </div>
+            </div>
+            <span asp-validation-for="Content" class="text-danger"></span>
+        </div>
+    </div>
+
+</form>

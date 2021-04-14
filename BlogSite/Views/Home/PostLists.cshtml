@@ -8,31 +8,47 @@
     <a class="btn btn-success" asp-action="AddPost" asp-controller="Home">Add new post</a>
 </div>
 
-<div class="card-deck" style="display:grid; grid-template-columns: auto auto auto;">
+@if (!Model.Any())
+{
+    <div class="container">
+        No data found
+    </div>
+}
+else
+{
+    <div class="card-deck" style="display:grid; grid-template-columns: auto auto auto;">
 
-    @foreach (var post in Model)
-    {
-        var imagePath = "~/images/" + (post.ImagePath ?? "defaultImage.jpg");
+        @foreach (var post in Model)
+        {
+            var imagePath = "~/images/" + (post.ImagePath ?? "defaultImage.jpg");
 
-        <div class="card" style="margin-bottom: 15px;">
-            <img class="card-img-top" src="@imagePath" asp-append-version="true" alt="Post image">
-            <div class="card-body">
-                <h5 class="card-title">@post.Title</h5>
+            <div class="card" style="margin-bottom: 15px;">
+                <img class="card-img-top" src="@imagePath" asp-append-version="true" alt="Post image">
+                <div class="card-header">
+                    <h5 class="card-title">@post.Title</h5>
+                </div>
+                <div class="card-body">
+                    @if (post.Text.Length > 100)
+                    {
+                        <p class="card-text">@post.Text.Substring(0, 100) ...</p>
+                    }
+                    else
+                    {
+                        <p class="card-text">@post.Text</p>
+                    }
 
-                @if (post.Text.Length > 100)
-                {
-                    <p class="card-text">@post.Text.Substring(0, 100) ...</p>
-                }
-                else
-                {
-                    <p class="card-text">@post.Text</p>
-                }
-
-                <a class="btn btn-primary" asp-action="GetById" asp-controller="Home" asp-route-id="@post.Id">Read more</a>
+                    <a class="btn btn-primary" asp-action="GetById" asp-controller="Home" asp-route-id="@post.Id">Read more</a>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">Author: @post.User.UserName</small>
+                    <br />
+                    <small class="text-muted">Categories:</small>
+                    @foreach (var category in post.Categories)
+                    {
+                        <span class="text-muted">@category.Name</span>
+                    }
+                </div>
             </div>
-            <div class="card-footer">
-                <small class="text-muted">Author: @post.User.UserName</small>
-            </div>
-        </div>
-    }
-</div>
+        }
+    </div>
+}

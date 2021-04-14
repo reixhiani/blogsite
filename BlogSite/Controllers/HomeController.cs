@@ -26,7 +26,6 @@ namespace BlogSite.Controllers
         private readonly IMapper _mapper;
         private readonly ILogger<HomeController> _logger;
 
-
         public HomeController(ILogger<HomeController> logger, IPostSerivce postSerivce, IMapper mapper,
             ICategoryService categoryService,
             IHostingEnvironment hostingEnvironment)
@@ -44,20 +43,20 @@ namespace BlogSite.Controllers
             try
             {
                 var posts = await _postSerivce.GetPosts();
+                var response = _mapper.Map<List<PostViewModel>>(posts);
 
                 if (!posts.Any())
                 {
                     _logger.LogError(Messages.NO_DATA);
-                    return BadRequest(new { message = string.Format(Messages.NO_DATA) });
+                    return View("PostLists", response);
                 }
 
-                var response = _mapper.Map<List<PostViewModel>>(posts);
                 return View("PostLists", response);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, Messages.UNEXPECTED_ERROR);
-                return BadRequest(new { message = Messages.UNEXPECTED_ERROR });
+                return RedirectToAction("Error", "Error");
             }
         }
 
@@ -71,7 +70,8 @@ namespace BlogSite.Controllers
                 if (post == null)
                 {
                     _logger.LogError(string.Format(Messages.NOT_FOUND, $"Post id: {id}"));
-                    return BadRequest(new { message = string.Format(Messages.NOT_FOUND, $"Post with id: {id}") });
+                    Response.StatusCode = 404;
+                    return View("NotFound");
                 }
 
                 var model = _mapper.Map<PostViewModel>(post);
@@ -81,7 +81,7 @@ namespace BlogSite.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, Messages.UNEXPECTED_ERROR);
-                return BadRequest(new { message = Messages.UNEXPECTED_ERROR });
+                return RedirectToAction("Error", "Error");
             }
         }
 
@@ -151,10 +151,7 @@ namespace BlogSite.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, Messages.UNEXPECTED_ERROR);
-                return BadRequest(new
-                {
-                    message = Messages.UNEXPECTED_ERROR
-                });
+                return RedirectToAction("Error", "Error");
             }
         }
 
@@ -165,20 +162,38 @@ namespace BlogSite.Controllers
             try
             {
                 var post = await _postSerivce.GetPostById(id);
-
                 if (post == null)
                 {
                     _logger.LogError(string.Format(Messages.NOT_FOUND, $"Post id: {id}"));
-                    return BadRequest(new { message = string.Format(Messages.NOT_FOUND, $"Post with id: {id}") });
+                    Response.StatusCode = 404;
+                    return View("NotFound");
+                }
+
+                // Prevent current user from modifing other users posts from url
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var userPosts = await _postSerivce.GetPostsByUser(userId);
+
+                if (!userPosts.Contains(post))
+                {
+                    Response.StatusCode = 404;
+                    return View("NotFound");
                 }
 
                 var model = _mapper.Map<PostViewModel>(post);
+
+                // set selected categories
+                model.CategoryIds = model.Categories.Select(c => c.Id).ToList();
+
+                // get all categories
+                var allCategories = await _categoryService.GetCategories();
+                model.Categories = _mapper.Map<List<CategoryViewModel>>(allCategories);
+
                 return View("UpdatePost", model);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, Messages.UNEXPECTED_ERROR);
-                return BadRequest(new { message = Messages.UNEXPECTED_ERROR });
+                return RedirectToAction("Error", "Error");
             }
         }
 
@@ -195,6 +210,15 @@ namespace BlogSite.Controllers
             }
             try
             {
+                // get post from DB
+                var post = await _postSerivce.GetPostById(model.Id);
+                if (post == null)
+                {
+                    _logger.LogError(string.Format(Messages.NOT_FOUND, $"Post id: {model.Id}"));
+                    Response.StatusCode = 404;
+                    return View("NotFound");
+                }
+
                 model.Categories = new List<CategoryViewModel>();
                 foreach (var id in model.CategoryIds)
                 {
@@ -204,8 +228,8 @@ namespace BlogSite.Controllers
                     };
                     model.Categories.Add(categoryModel);
                 }
-
-                var post = _mapper.Map<Post>(model);
+         
+                _mapper.Map(model, post);
                 post.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
                 string fileName = null;
@@ -246,31 +270,48 @@ namespace BlogSite.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, Messages.UNEXPECTED_ERROR);
-                return BadRequest(new { message = Messages.UNEXPECTED_ERROR });
+                return RedirectToAction("Error", "Error");
             }
         }
 
-        [HttpDelete]
+        [HttpPost]
         public async Task<IActionResult> DeletePost(int id)
         {
             try
             {
                 var post = await _postSerivce.GetPostById(id);
-
                 if (post == null)
                 {
                     _logger.LogError(string.Format(Messages.NOT_FOUND, $"Post id: {id}"));
-                    return BadRequest(new { message = string.Format(Messages.NOT_FOUND, $"Post with id: {id}") });
+                    Response.StatusCode = 404;
+                    return View("NotFound");
+                }
+
+                // Prevent current user from modifing other users posts
+                string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var userPosts = await _postSerivce.GetPostsByUser(userId);
+
+                if (!userPosts.Contains(post))
+                {
+                    Response.StatusCode = 404;
+                    return View("NotFound");
+                }
+
+                // if post has image delete it
+                if (post.ImagePath != null)
+                {
+                    string existingFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "images", post.ImagePath);
+                    System.IO.File.Delete(existingFilePath);
                 }
 
                 await _postSerivce.DeletePost(post);
 
-                return RedirectToAction("GetAll", "Home");
+                return StatusCode(200);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, Messages.UNEXPECTED_ERROR);
-                return BadRequest(new { message = Messages.UNEXPECTED_ERROR });
+                return RedirectToAction("Error", "Error");
             }
         }
 

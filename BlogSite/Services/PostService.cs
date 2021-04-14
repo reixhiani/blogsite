@@ -56,6 +56,7 @@ namespace BlogSite.Services
                 return await _genericRepository.GetAllAsQueryable()
                     .Include(p => p.User)
                     .Include(p => p.Comments)
+                        .ThenInclude(c => c.User)
                     .Include(p => p.PostCategorys)
                         .ThenInclude(p => p.Category)
                     .FirstOrDefaultAsync(p => p.Id == id);
@@ -75,7 +76,7 @@ namespace BlogSite.Services
                     .Include(p => p.User)
                     .Include(p => p.Comments)
                     .Include(p => p.PostCategorys)
-                    .ThenInclude(p => p.Category)
+                        .ThenInclude(p => p.Category)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -111,5 +112,25 @@ namespace BlogSite.Services
                 throw ex;
             }
         }
+
+        public async Task<List<Post>> GetPostsByUser(string userId)
+        {
+            try
+            {
+                return await _genericRepository.GetAllAsQueryable()
+                    .Where(p => p.User.Id == userId)
+                    .Include(p => p.User)
+                    .Include(p => p.Comments)
+                    .Include(p => p.PostCategorys)
+                        .ThenInclude(p => p.Category)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, Messages.UNEXPECTED_ERROR);
+                throw ex;
+            }
+        }
+
     }
 }

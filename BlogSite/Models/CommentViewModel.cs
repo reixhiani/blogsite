@@ -10,13 +10,15 @@ namespace BlogSite.Models
     {
         public int Id { get; set; }
 
-        public int ParentId { get; set; }
-
         [Required]
         public string Content { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
+        public int PostId { get; set; }
         public PostViewModel Post { get; set; }
+
+        public string UserId { get; set; }
+        public ApplicationUserViewModel User { get; set; }
     }
 }
