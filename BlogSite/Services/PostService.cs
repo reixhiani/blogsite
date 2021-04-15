@@ -68,16 +68,15 @@ namespace BlogSite.Services
             }
         }
 
-        public async Task<List<Post>> GetPosts()
+        public IQueryable<Post> GetPosts()
         {
             try
             {
-                return await _genericRepository.GetAllAsQueryable()
+                return _genericRepository.GetAllAsQueryable()
                     .Include(p => p.User)
                     .Include(p => p.Comments)
                     .Include(p => p.PostCategorys)
-                        .ThenInclude(p => p.Category)
-                    .ToListAsync();
+                        .ThenInclude(p => p.Category);              
             }
             catch (Exception ex)
             {

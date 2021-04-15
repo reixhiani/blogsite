@@ -6,6 +6,7 @@ using BlogSite.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -38,20 +39,36 @@ namespace BlogSite.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<PostViewModel>>> GetAll()
+        [HttpGet]
+        public async Task<ActionResult<PostListViewModel>> GetAll(string searchText, int categoryId)
         {
             try
             {
-                var posts = await _postSerivce.GetPosts();
-                var response = _mapper.Map<List<PostViewModel>>(posts);
+                var posts = _postSerivce.GetPosts();
+                var model = new PostListViewModel();
+
+                if (!string.IsNullOrEmpty(searchText))
+                {
+                    posts = posts.Where(p => p.Title.Contains(searchText));
+                }
+
+                if (categoryId > 0)
+                {
+                    posts = posts.Where(p => p.PostCategorys.Any(p => p.CategoryId == categoryId));
+                }
+
+                var categories = await _categoryService.GetCategories();
+
+                model.Posts = _mapper.Map<List<PostViewModel>>(posts.ToList());
+                model.Categories = _mapper.Map<List<CategoryViewModel>>(categories);
 
                 if (!posts.Any())
                 {
                     _logger.LogError(Messages.NO_DATA);
-                    return View("PostLists", response);
+                    return View("PostLists", model);
                 }
 
-                return View("PostLists", response);
+                return View("PostLists", model);
             }
             catch (Exception ex)
             {
@@ -61,6 +78,7 @@ namespace BlogSite.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet]
         public async Task<ActionResult<PostViewModel>> GetById(int id)
         {
             try
@@ -138,7 +156,10 @@ namespace BlogSite.Controllers
                         string uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "images");
                         fileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
                         string filePath = Path.Combine(uploadsFolder, fileName);
-                        model.Image.CopyTo(new FileStream(filePath, FileMode.Create));
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            model.Image.CopyTo(fileStream);
+                        }
                         post.ImagePath = fileName;
                     }
                 }

@@ -8,7 +8,7 @@ namespace BlogSite.Interfaces
 {
     public interface IPostSerivce
     {
-        Task<List<Post>> GetPosts();
+        IQueryable<Post> GetPosts();
 
         Task<Post> GetPostById(int id);
 
