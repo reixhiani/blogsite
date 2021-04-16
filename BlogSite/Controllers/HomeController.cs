@@ -114,6 +114,7 @@ namespace BlogSite.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddPost([FromForm] PostViewModel model)
         {
             if (!ModelState.IsValid)
@@ -219,6 +220,7 @@ namespace BlogSite.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdatePost([FromForm] PostViewModel model)
         {
             if (!ModelState.IsValid)

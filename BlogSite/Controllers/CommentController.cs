@@ -35,7 +35,14 @@ namespace BlogSite.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet]
+        public IActionResult AddComment()
+        {
+            return RedirectToAction("GetAll", "Home");
+        }
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddComment([FromForm] CommentViewModel model)
         {
             if (!ModelState.IsValid)
